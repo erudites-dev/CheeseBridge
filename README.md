@@ -58,7 +58,7 @@ CheeseBridgeAPI.DONATION_HANDLER = (player, event) => {
 }
 ```
 
-## 서버 설정 방법
-API 이용을 위한 애플리케이션 등록: https://developers.chzzk.naver.com/
+## 치지직 API 애플리케이션 등록 방법
+https://developers.chzzk.naver.com/
 
 <img src="./chzzk_app_auth.png">
