@@ -122,7 +122,7 @@ public class ChzzkManager {
 
                         CheeseBridge.LOGGER.info("후원 발생! {}: {}원", nickname, amount);
 
-                        ClientPlayNetworking.send(new C2S_DonationPayload(amount, text));
+                        ClientPlayNetworking.send(new C2S_DonationPayload(nickname, amount, text));
                     }
                     catch (Exception e) { CheeseBridge.LOGGER.error("후원 데이터 처리 중 오류: ", e); }
                 });

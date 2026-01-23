@@ -36,22 +36,22 @@ public class DonationLogger {
         writeToFile("INFO", String.format("%s(%s)", message, playerName));
     }
 
-    public static void logDonation(String playerName, String amount) {
+    public static void logDonation(String senderName, String playerName, String amount) {
         String formattedAmount = amount;
 
         try { formattedAmount = NumberFormat.getInstance().format(Integer.parseInt(amount)); }
         catch(Exception ignored) { }
 
-        writeToFile("DONATION", String.format("%s → %s", playerName, formattedAmount));
+        writeToFile("DONATION", String.format("%s(%s) → %s", senderName, formattedAmount, playerName));
     }
 
-    public static void logDonation(String playerName, String amount, String managerName) {
+    public static void logDonationManager(String playerName, String amount, String managerName) {
         String formattedAmount = amount;
 
         try { formattedAmount = NumberFormat.getInstance().format(Integer.parseInt(amount)); }
         catch(Exception ignored) { }
 
-        writeToFile("DONATION", String.format("%s → %s | 담당자: %s", playerName, formattedAmount, managerName));
+        writeToFile("DONATION", String.format("운영자(%s) → %s | 담당자: %s", formattedAmount, playerName, managerName));
     }
 
     public static void logReward(String playerName, String reward) {

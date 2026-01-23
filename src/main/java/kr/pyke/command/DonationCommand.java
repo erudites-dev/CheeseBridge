@@ -21,6 +21,7 @@ import net.minecraft.server.level.ServerPlayer;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 public class DonationCommand {
     private DonationCommand() { }
@@ -51,9 +52,9 @@ public class DonationCommand {
             List<ServerPlayer> serverPlayers = source.getServer().getPlayerList().getPlayers();
 
             source.getServer().execute(() -> {
-                DonationLogger.logDonation(targetPlayerName, String.valueOf(amount), managerName);
+                DonationLogger.logDonationManager(targetPlayerName, String.valueOf(amount), managerName);
 
-                ChzzkBridge.triggerDonation(targetPlayer, new ChzzkDonationEvent(String.valueOf(amount), "운영자 수동 지급"));
+                ChzzkBridge.triggerDonation(targetPlayer, new ChzzkDonationEvent("운영자", String.valueOf(amount), "수동 지급"));
 
                 PykeLib.sendSystemMessage(serverPlayers, COLOR.LIME.getColor(), String.format("%s님에게 보상을 수동 지급했습니다.", targetPlayerName));
             });
@@ -72,7 +73,7 @@ public class DonationCommand {
             ServerPlayer player = ctx.getSource().getPlayerOrException();
 
             ChzzkDataState dataState = ChzzkDataState.getServerState(ctx.getSource().getServer());
-            String savedToken = dataState.playerTokens.get(player.getUUID());
+            String savedToken = dataState.playerTokens.get(player.getUUID()).accessToken();
 
             if (savedToken != null) {
                 ServerPlayNetworking.send(player, new S2C_FinalTokenPayload(savedToken));
@@ -80,7 +81,7 @@ public class DonationCommand {
             }
             else {
                 String clientId = CheeseBridgeConfig.DATA.clientID;
-                String state = java.util.UUID.randomUUID().toString();
+                String state = UUID.randomUUID().toString();
 
                 String authUrl = String.format("https://chzzk.naver.com/account-interlock?clientId=%s&redirectUri=%s&state=%s", clientId, "http://localhost:8080/callback", state);
 

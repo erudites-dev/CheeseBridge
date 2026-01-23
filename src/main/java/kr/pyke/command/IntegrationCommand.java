@@ -18,15 +18,6 @@ public class IntegrationCommand {
         dispatcher.register(ClientCommandManager.literal("연동해제")
             .executes(IntegrationCommand::integrationDisconnect)
         );
-
-        dispatcher.register(ClientCommandManager.literal("연동테스트")
-            .then(ClientCommandManager.argument("token", StringArgumentType.greedyString())
-                .executes(ctx -> {
-                    String token = StringArgumentType.getString(ctx, "token");
-                    ChzzkManager.getInstance().connect(token);
-                    return 1;
-                }))
-        );
     }
 
     private static int integrationDisconnect(CommandContext<FabricClientCommandSource> ctx) {
