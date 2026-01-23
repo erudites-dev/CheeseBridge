@@ -1,0 +1,24 @@
+{
+	"schemaVersion": 1,
+	"id": "cheese-bridge",
+	"version": "${version}",
+	"name": "Cheese Bridge",
+	"description": "A Minecraft mod that integrates Chzzk donations with the game in real-time.",
+	"author": [ "Pyke_Lee" ],
+	"contact": { },
+	"license": "LGPL 3.0",
+	"icon": "assets/cheese-bridge/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [ "kr.pyke.CheeseBridge" ],
+		"client": [ "kr.pyke.client.CheeseBridgeClient" ]
+	},
+	"mixins": [ "cheese-bridge.mixins.json" ],
+	"depends": {
+		"fabricloader": ">=0.17.4",
+		"minecraft": "~1.21.1",
+		"java": ">=21",
+		"fabric-api": "*",
+		"pykelib": "*"
+	}
+}
