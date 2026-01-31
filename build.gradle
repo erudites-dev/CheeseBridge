@@ -11,7 +11,7 @@ base {
 }
 
 repositories {
-	flatDir { dirs 'lib' }
+	maven { url = uri("https://jitpack.io") }
 }
 
 dependencies {
@@ -23,21 +23,26 @@ dependencies {
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
-	modImplementation "kr.pyke:pykelib:${project.pyke_lib_version}"
+	// Pyke Lib
+	modImplementation("com.github.Pyke-Lee:PykeLib:${project.pyke_lib_version}")
 
+	// io.socket
 	implementation "io.socket:socket.io-client:${project.io_socket_version}"
 	include "io.socket:socket.io-client:${project.io_socket_version}"
 	include "io.socket:engine.io-client:${project.io_socket_version}"
 
+	// http
 	implementation "com.squareup.okhttp3:okhttp:3.14.9"
 	include "com.squareup.okhttp3:okhttp:3.14.9"
 
 	implementation "com.squareup.okio:okio:1.17.2"
 	include "com.squareup.okio:okio:1.17.2"
 
+	// json
 	implementation "org.json:json:20231013"
 	include "org.json:json:20231013"
 
+	// gson
 	implementation "com.google.code.gson:gson:${project.gson_version}"
 	include "com.google.code.gson:gson:${project.gson_version}"
 }
