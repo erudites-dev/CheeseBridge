@@ -3,6 +3,7 @@ package kr.pyke.command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.context.CommandContext;
+import kr.pyke.CheeseBridge;
 import kr.pyke.PykeLib;
 import kr.pyke.config.CheeseBridgeConfig;
 import kr.pyke.integration.ChzzkBridge;
@@ -48,7 +49,7 @@ public class DonationCommand {
 
             CommandSourceStack source = ctx.getSource();
             String managerName = Objects.requireNonNull(source.getPlayer()).getName().getString();
-            String targetPlayerName = targetPlayer.getName().getString();
+            String targetPlayerName = targetPlayer.getDisplayName().getString();
             List<ServerPlayer> serverPlayers = source.getServer().getPlayerList().getPlayers();
 
             source.getServer().execute(() -> {
@@ -56,7 +57,7 @@ public class DonationCommand {
 
                 ChzzkBridge.triggerDonation(targetPlayer, new ChzzkDonationEvent("운영자", String.valueOf(amount), "수동 지급"));
 
-                PykeLib.sendSystemMessage(serverPlayers, COLOR.LIME.getColor(), String.format("%s님에게 보상을 수동 지급했습니다.", targetPlayerName));
+                PykeLib.sendSystemMessage(serverPlayers, COLOR.LIME.getColor(), String.format("&7%s&f님에게 보상을 수동 지급했습니다.", targetPlayerName));
             });
 
             return 1;
@@ -73,7 +74,8 @@ public class DonationCommand {
             ServerPlayer player = ctx.getSource().getPlayerOrException();
 
             ChzzkDataState dataState = ChzzkDataState.getServerState(ctx.getSource().getServer());
-            String savedToken = dataState.playerTokens.get(player.getUUID()).accessToken();
+            ChzzkDataState.TokenInfo tokenInfo = dataState.playerTokens.get(player.getUUID());
+            String savedToken = (tokenInfo != null) ? tokenInfo.accessToken() : null;
 
             if (savedToken != null) {
                 ServerPlayNetworking.send(player, new S2C_FinalTokenPayload(savedToken));
@@ -90,6 +92,9 @@ public class DonationCommand {
 
             return 1;
         }
-        catch (Exception e) { return 0; }
+        catch (Exception e) {
+            CheeseBridge.LOGGER.error("ERROR: ", e);
+            return 0;
+        }
     }
 }

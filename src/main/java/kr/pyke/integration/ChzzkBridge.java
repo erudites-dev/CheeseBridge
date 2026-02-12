@@ -22,7 +22,7 @@ public class ChzzkBridge {
     }
 
     public static void logReward(ServerPlayer player, String reward) {
-        DonationLogger.logReward(player.getName().toString(), reward);
+        DonationLogger.logReward(player.getName().getString(), reward);
     }
 
     public static String exchangeCodeForToken(String authCode, String authState) {
