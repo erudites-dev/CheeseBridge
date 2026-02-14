@@ -2,11 +2,11 @@ package kr.pyke;
 
 import kr.pyke.command.DonationCommand;
 import kr.pyke.config.CheeseBridgeConfig;
-import kr.pyke.integration.ChzzkDataState;
+import kr.pyke.integration.BridgeDataState;
 import kr.pyke.network.CheeseBridgePacket;
 import kr.pyke.network.payload.s2c.S2C_FinalTokenPayload;
+import kr.pyke.util.PLATFORM;
 import net.fabricmc.api.ModInitializer;
-
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -31,12 +31,15 @@ public class CheeseBridge implements ModInitializer {
 			server.execute(() -> {
 				ServerPlayer player = handler.getPlayer();
 
-				ChzzkDataState state = ChzzkDataState.getServerState(server);
-				ChzzkDataState.TokenInfo tokenInfo = state.playerTokens.get(player.getUUID());
+				BridgeDataState state = BridgeDataState.getServerState(server);
 
-				if (tokenInfo != null) {
-					ServerPlayNetworking.send(player, new S2C_FinalTokenPayload(tokenInfo.accessToken()));
-					LOGGER.info("[인증] {} 님의 토큰을 로드하여 자동 연결합니다.", player.getName().getString());
+				for (PLATFORM platform : PLATFORM.values()) {
+					BridgeDataState.TokenInfo tokenInfo = state.getToken(player.getUUID(), platform);
+
+					if (tokenInfo != null) {
+						ServerPlayNetworking.send(player, new S2C_FinalTokenPayload(tokenInfo.accessToken(), platform.name()));
+						LOGGER.info("[인증] {} 님의 {} 토큰을 로드하여 자동 연결합니다.", player.getName().getString(), platform);
+					}
 				}
 			});
 		});

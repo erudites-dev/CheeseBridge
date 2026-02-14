@@ -1,35 +1,44 @@
 package kr.pyke.command;
 
 import com.mojang.brigadier.CommandDispatcher;
-import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
-import kr.pyke.client.ChzzkAuthServer;
-import kr.pyke.client.ChzzkManager;
+import kr.pyke.CheeseBridge;
+import kr.pyke.client.BridgeAuthServer;
 import kr.pyke.client.PykeLibClient;
+import kr.pyke.client.chzzk.ChzzkManager;
+import kr.pyke.client.soop.SoopManager;
 import kr.pyke.util.constants.COLOR;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.Util;
+import net.minecraft.client.Minecraft;
 
 public class IntegrationCommand {
-    private static final ChzzkAuthServer AUTH_SERVER = new ChzzkAuthServer();
+    private static final BridgeAuthServer AUTH_SERVER = new BridgeAuthServer();
 
     public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher) {
         dispatcher.register(ClientCommandManager.literal("연동해제")
-            .executes(IntegrationCommand::integrationDisconnect)
+            .executes(IntegrationCommand::executeDisconnect)
         );
     }
 
-    private static int integrationDisconnect(CommandContext<FabricClientCommandSource> ctx) {
-        ChzzkManager.getInstance().disconnect();
-        PykeLibClient.sendSystemMessage(COLOR.RED.getColor(), "치지직 후원 연동이 일시적으로 해제되었습니다.");
-        PykeLibClient.sendSystemMessage(COLOR.RED.getColor(), "'/후원연동' 입력 시 즉시 다시 연결됩니다.");
+    private static int executeDisconnect(CommandContext<FabricClientCommandSource> ctx) {
+        ctx.getSource().getClient().execute(() -> {
+            try {
+                ChzzkManager.getInstance().disconnect();
+                SoopManager.getInstance().disconnect();
+                AUTH_SERVER.stop();
+                PykeLibClient.sendSystemMessage(COLOR.RED.getColor(), "모든 후원 연동이 해제되었습니다.");
+            }
+            catch (Exception e) { CheeseBridge.LOGGER.error("연동 해제 명령어 실행 중 오류 발생: ", e); }
+        });
+
         return 1;
     }
 
-    public static void startAuthProcess(String url) {
-        AUTH_SERVER.start();
+    public static void startAuthProcess(String url, String platformName) {
+        AUTH_SERVER.start(platformName);
         Util.getPlatform().openUri(url);
-        PykeLibClient.sendSystemMessage(COLOR.LIME.getColor(), "브라우저에서 치지직 로그인을 진행해 주세요.");
+        PykeLibClient.sendSystemMessage(COLOR.LIME.getColor(), platformName + " 로그인을 진행해주세요.");
     }
 }

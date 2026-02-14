@@ -1,6 +1,8 @@
 package kr.pyke.client;
 
 import kr.pyke.CheeseBridge;
+import kr.pyke.client.chzzk.ChzzkManager;
+import kr.pyke.client.soop.SoopManager;
 import kr.pyke.command.IntegrationCommand;
 import kr.pyke.network.CheeseBridgePacket;
 import net.fabricmc.api.ClientModInitializer;
@@ -16,7 +18,8 @@ public class CheeseBridgeClient implements ClientModInitializer {
 
         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
             ChzzkManager.getInstance().disconnect();
-            CheeseBridge.LOGGER.info("서버 연결 종료로 인해 치지직 소켓을 닫습니다.");
+            SoopManager.getInstance().disconnect();
+            CheeseBridge.LOGGER.info("서버 연결 종료로 인해 모든 소켓을 닫습니다.");
         });
     }
 }

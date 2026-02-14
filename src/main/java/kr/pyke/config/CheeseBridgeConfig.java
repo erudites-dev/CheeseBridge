@@ -13,6 +13,16 @@ public class CheeseBridgeConfig {
     public static ConfigInstance DATA = new ConfigInstance();
 
     public static class ConfigInstance {
+        public ChzzkConfig chzzk = new ChzzkConfig();
+        public SoopConfig soop = new SoopConfig();
+    }
+
+    public static class ChzzkConfig {
+        public String clientID = "YOUR_CLIENT_ID";
+        public String clientSecret = "YOUR_CLIENT_SECRET";
+    }
+
+    public static class SoopConfig {
         public String clientID = "YOUR_CLIENT_ID";
         public String clientSecret = "YOUR_CLIENT_SECRET";
     }

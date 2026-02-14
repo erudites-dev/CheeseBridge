@@ -7,7 +7,7 @@ version = project.mod_version
 group = project.maven_group
 
 base {
-	archivesName = project.archives_base_name
+	archivesName = "${project.archives_base_name}-${project.minecraft_version}"
 }
 
 repositories {
@@ -45,6 +45,10 @@ dependencies {
 	// gson
 	implementation "com.google.code.gson:gson:${project.gson_version}"
 	include "com.google.code.gson:gson:${project.gson_version}"
+
+	// java-websocket
+	implementation 'org.java-websocket:Java-WebSocket:1.5.3'
+	include 'org.java-websocket:Java-WebSocket:1.5.3'
 }
 
 processResources {
